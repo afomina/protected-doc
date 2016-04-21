@@ -8,7 +8,8 @@ import javax.persistence.Table;
  */
 @Entity
 @Table
-public class SecurityLevel extends BaseObject {
+public class SecurityLevel extends BaseObject implements Comparable<SecurityLevel> {
+    private Integer level;
     private String value;
 
     public String getValue() {
@@ -17,5 +18,17 @@ public class SecurityLevel extends BaseObject {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public Integer getLevel() {
+        return level;
+    }
+
+    public void setLevel(Integer level) {
+        this.level = level;
+    }
+
+    public int compareTo(SecurityLevel o) {
+        return getLevel().compareTo(o.getLevel());
     }
 }

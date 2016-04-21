@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.jdbc.DataSourceBuilder;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 
 import javax.sql.DataSource;
 
@@ -13,7 +14,7 @@ import javax.sql.DataSource;
  * Created by alexa on 20.04.2016.
  */
 @SpringBootApplication
-//@ComponentScan("protdoc")
+@ComponentScan("pack")
 //@EnableWebMvc
 public class Application extends SpringBootServletInitializer {
 
