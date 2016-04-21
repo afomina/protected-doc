@@ -11,8 +11,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import pack.protdoc.dao.MsgDAO;
+import pack.protdoc.dao.UserDAO;
 import pack.protdoc.model.Message;
 import pack.protdoc.secure.SecurityCheckService;
+import pack.protdoc.service.MsgService;
 
 import java.util.List;
 
@@ -26,6 +28,10 @@ public class MainController {
     private MsgDAO msgDAO;
     @Autowired
     private SecurityCheckService securityCheckService;
+    @Autowired
+    private MsgService msgService;
+    @Autowired
+    private UserDAO userDAO;
 
     @RequestMapping("/write")
     public String writeMsg() {
@@ -49,7 +55,7 @@ public class MainController {
     @RequestMapping("/getMessages")
     @ResponseBody
     public List<Message> getMsgList(@RequestParam("id") Integer userId) { //TODO: current logged in user
-        return msgDAO.findByReceiverId(userId); //TODO: + group receiver in
+        return msgService.findByReceiver(userDAO.findOne(userId));
     }
 
 }
