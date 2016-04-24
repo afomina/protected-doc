@@ -3,9 +3,6 @@ package pack.protdoc.controller;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpEntity;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -24,7 +21,7 @@ import java.util.List;
  * Created by alexa on 19.04.2016.
  */
 @Controller
-public class MainController {
+public class MessageController {
 
     @Autowired
     private MsgDAO msgDAO;
@@ -36,7 +33,7 @@ public class MainController {
     private UserDAO userDAO;
     @Autowired
     private SecurityLevelDAO securityLevelDAO;
-    private Logger log = LoggerFactory.getLogger(MainController.class) ;
+    private Logger log = LoggerFactory.getLogger(MessageController.class) ;
 
     @RequestMapping("login")
     public String login() {
