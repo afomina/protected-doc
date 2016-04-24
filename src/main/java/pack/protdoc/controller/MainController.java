@@ -1,19 +1,20 @@
 package pack.protdoc.controller;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 import pack.protdoc.dao.MsgDAO;
+import pack.protdoc.dao.SecurityLevelDAO;
 import pack.protdoc.dao.UserDAO;
 import pack.protdoc.model.Message;
-import pack.protdoc.secure.SecurityCheckService;
+import pack.protdoc.secure.*;
+import pack.protdoc.secure.SecurityException;
 import pack.protdoc.service.MsgService;
 
 import java.util.List;
@@ -32,30 +33,45 @@ public class MainController {
     private MsgService msgService;
     @Autowired
     private UserDAO userDAO;
+    @Autowired
+    private SecurityLevelDAO securityLevelDAO;
+    private Logger log = LoggerFactory.getLogger(MainController.class) ;
 
-    @RequestMapping("/write")
-    public String writeMsg() {
+    @RequestMapping(value = "/write", method = RequestMethod.GET)
+    public String writeMsg(Model model) {
+        model.addAttribute("msg", new Message());
+        model.addAttribute("users", userDAO.findAll());
+        model.addAttribute("levels", securityLevelDAO.findAll());
         return "write";
     }
 
-    @RequestMapping("/send")
-    public ResponseEntity send(@RequestBody Message msg) {
-        if (securityCheckService.check(msg)) {
-            msgDAO.save(msg);
-            return new ResponseEntity(HttpStatus.OK);
+    @RequestMapping(value = "/write", method = RequestMethod.POST)
+    public String send(@ModelAttribute Message msg, Model model) {
+        log.error(msg.getReceiver().toString());
+        try {
+            if (securityCheckService.check(msg)) {
+                msgDAO.save(msg);
+            }
+        } catch (SecurityException e) {
+            model.addAttribute("err", e.getMessage());
         }
-        return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        model.addAttribute("msg", new Message());
+        model.addAttribute("users", userDAO.findAll());
+        model.addAttribute("levels", securityLevelDAO.findAll());
+        return "write";
     }
 
-    @RequestMapping("/")
-    public String indexPage() {
+    @RequestMapping(value = "/msgs", method = RequestMethod.GET)
+    public String indexPage(Model model) {
+        List<Message> msgs = msgService.findByReceiver(userDAO.findOne(1));//userId));
+        model.addAttribute("msgs", msgs);
         return "msgs";
     }
 
-    @RequestMapping("/getMessages")
-    @ResponseBody
-    public List<Message> getMsgList(@RequestParam("id") Integer userId) { //TODO: current logged in user
-        return msgService.findByReceiver(userDAO.findOne(userId));
-    }
+//    @RequestMapping("/getMessages")
+//    @ResponseBody
+//    public List<Message> getMsgList(@RequestParam("id") Integer userId) { //TODO: current logged in user
+//        return msgService.findByReceiver(userDAO.findOne(userId));
+//    }
 
 }

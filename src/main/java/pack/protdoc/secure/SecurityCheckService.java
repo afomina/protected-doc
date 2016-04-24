@@ -10,15 +10,17 @@ import pack.protdoc.model.User;
  */
 @Service
 public class SecurityCheckService {
-    public boolean check(Message msg) {
+    public boolean check(Message msg) throws SecurityException {
         if (msg.getReceiver() != null) {
             if (!check(msg, msg.getReceiver())) {
-                return false;
+                throw new SecurityException(msg.getSecurityLevel() +
+                        " message can not be sent to user with '" + msg.getReceiver().getSecurityLevel() + "' level!");
             }
         } else if (msg.getGroupReceiver() != null) {
             for (User user : msg.getGroupReceiver().getUsers()) {
                 if (!check(msg, user)) {
-                    return false;
+                    throw new SecurityException(msg.getSecurityLevel() +
+                            " message can not be sent to group containing user with " + user.getSecurityLevel() + " level");
                 }
             }
         } else {

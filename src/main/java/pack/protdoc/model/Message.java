@@ -1,9 +1,6 @@
 package pack.protdoc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by alexa on 19.04.2016.
@@ -11,6 +8,17 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class Message extends BaseObject {
+    private Integer id;
+
+    @Id
+    @GeneratedValue
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     private String text;
     private SecurityLevel securityLevel;
     private User sender;

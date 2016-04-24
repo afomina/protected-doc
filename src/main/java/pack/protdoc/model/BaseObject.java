@@ -6,7 +6,7 @@ import javax.persistence.Id;
 /**
  * Created by alexa on 19.04.2016.
  */
-@Entity
+//@Entity
 public class BaseObject {
     private Integer id;
 

@@ -1,9 +1,6 @@
 package pack.protdoc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
-import javax.persistence.Table;
+import javax.persistence.*;
 
 /**
  * Created by alexa on 19.04.2016.
@@ -11,8 +8,20 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class User extends BaseObject implements Receiver {
+    private Integer id;
+
+    @Id
+    @GeneratedValue
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     private String login;
     private String password;
+    private String name;
     private SecurityLevel securityLevel;
 
     public String getLogin() {
@@ -29,6 +38,14 @@ public class User extends BaseObject implements Receiver {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     @JoinColumn

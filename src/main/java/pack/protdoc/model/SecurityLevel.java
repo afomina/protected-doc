@@ -1,6 +1,8 @@
 package pack.protdoc.model;
 
 import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
 import javax.persistence.Table;
 
 /**
@@ -9,6 +11,17 @@ import javax.persistence.Table;
 @Entity
 @Table
 public class SecurityLevel extends BaseObject implements Comparable<SecurityLevel> {
+    private Integer id;
+
+    @Id
+    @GeneratedValue
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     private Integer level;
     private String value;
 
@@ -30,5 +43,10 @@ public class SecurityLevel extends BaseObject implements Comparable<SecurityLeve
 
     public int compareTo(SecurityLevel o) {
         return getLevel().compareTo(o.getLevel());
+    }
+
+    @Override
+    public String toString() {
+        return value;
     }
 }

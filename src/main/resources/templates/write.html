@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+<body>
+<h2><label style="color: red;" th:text="${err}"></label></h2>
+<form action="#" th:action="@{/write}" th:object="${msg}" method="post">
+    <p>To:
+        <select th:field="*{receiver}">
+            <option th:each="u: ${users}" th:value="${u.getId()}" th:text="${u.getName()}"></option>
+        </select>
+    </p>
+
+    <p>Message: <textarea th:field="*{text}" /></p>
+    <p>Security
+        <select th:field="*{securityLevel}">
+            <option th:each="lvl: ${levels}" th:value="${lvl.getId()}" th:text="${lvl.getValue()}"></option>
+        </select>
+    </p>
+    <p><input type="submit" value="Send" /></p>
+</form>
+</body>
+</html>

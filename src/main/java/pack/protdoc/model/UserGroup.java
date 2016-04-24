@@ -1,8 +1,6 @@
 package pack.protdoc.model;
 
-import javax.persistence.Entity;
-import javax.persistence.ManyToMany;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.List;
 
 /**
@@ -11,6 +9,17 @@ import java.util.List;
 @Entity
 @Table
 public class UserGroup extends BaseObject implements Receiver {
+    private Integer id;
+
+    @Id
+    @GeneratedValue
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
     private String name;
     private List<User> users;
 
