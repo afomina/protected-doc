@@ -16,6 +16,7 @@ import pack.protdoc.model.Message;
 import pack.protdoc.secure.*;
 import pack.protdoc.secure.SecurityException;
 import pack.protdoc.service.MsgService;
+import pack.protdoc.service.UserService;
 
 import java.util.List;
 
@@ -37,33 +38,48 @@ public class MainController {
     private SecurityLevelDAO securityLevelDAO;
     private Logger log = LoggerFactory.getLogger(MainController.class) ;
 
+    @RequestMapping("login")
+    public String login() {
+        return "login";
+    }
+
     @RequestMapping(value = "/write", method = RequestMethod.GET)
     public String writeMsg(Model model) {
-        model.addAttribute("msg", new Message());
-        model.addAttribute("users", userDAO.findAll());
-        model.addAttribute("levels", securityLevelDAO.findAll());
+        setupMsgModel(model);
         return "write";
     }
 
     @RequestMapping(value = "/write", method = RequestMethod.POST)
     public String send(@ModelAttribute Message msg, Model model) {
-        log.error(msg.getReceiver().toString());
+//        log.error(msg.getReceiver().toString());
+        if (msg.getSender() == null) {
+            msg.setSender(UserService.getCurrentUser());
+        }
         try {
             if (securityCheckService.check(msg)) {
                 msgDAO.save(msg);
             }
         } catch (SecurityException e) {
             model.addAttribute("err", e.getMessage());
+            setupMsgModel(model);
+            return "write";
         }
-        model.addAttribute("msg", new Message());
-        model.addAttribute("users", userDAO.findAll());
-        model.addAttribute("levels", securityLevelDAO.findAll());
-        return "write";
+        List<Message> msgs = msgService.findByReceiver(UserService.getCurrentUser());
+        model.addAttribute("msgs", msgs);
+        return "msgs";
     }
 
-    @RequestMapping(value = "/msgs", method = RequestMethod.GET)
+    private void setupMsgModel(Model model) {
+        Message msg = new Message();
+        msg.setSender(UserService.getCurrentUser());
+        model.addAttribute("msg", msg);
+        model.addAttribute("users", userDAO.findAll());
+        model.addAttribute("levels", securityLevelDAO.findAll());
+    }
+
+    @RequestMapping(value = "/", method = RequestMethod.GET)
     public String indexPage(Model model) {
-        List<Message> msgs = msgService.findByReceiver(userDAO.findOne(1));//userId));
+        List<Message> msgs = msgService.findByReceiver(UserService.getCurrentUser());
         model.addAttribute("msgs", msgs);
         return "msgs";
     }

@@ -20,5 +20,11 @@
     </p>
     <p><input type="submit" value="Send" /></p>
 </form>
+<p>
+    <a href="/">Back to message list</a>
+</p>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
 </body>
 </html>

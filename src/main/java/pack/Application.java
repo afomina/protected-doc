@@ -7,6 +7,7 @@ import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 
 import javax.sql.DataSource;
 
@@ -16,6 +17,7 @@ import javax.sql.DataSource;
 @SpringBootApplication
 @ComponentScan("pack")
 //@EnableWebMvc
+@EnableWebSecurity
 public class Application extends SpringBootServletInitializer {
 
     @Override

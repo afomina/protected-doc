@@ -1,13 +1,17 @@
 package pack.protdoc.model;
 
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import javax.persistence.*;
+import java.util.Collection;
 
 /**
  * Created by alexa on 19.04.2016.
  */
 @Entity
 @Table
-public class User extends BaseObject implements Receiver {
+public class User extends BaseObject implements Receiver, UserDetails {
     private Integer id;
 
     @Id
@@ -56,5 +60,46 @@ public class User extends BaseObject implements Receiver {
 
     public void setSecurityLevel(SecurityLevel securityLevel) {
         this.securityLevel = securityLevel;
+    }
+
+    @Transient
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return null;
+    }
+
+    @Transient
+    @Override
+    public String getUsername() {
+        return login;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Transient
+    @Override
+    public boolean isEnabled() {
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return name;
     }
 }
