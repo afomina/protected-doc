@@ -25,4 +25,8 @@ public class MsgService {
         group.addAll(msgDAO.findByReceiverId(receiver.getId()));
         return group;
     }
+
+    public List<Message> findBySender(User user) {
+        return msgDAO.findBySender(user);
+    }
 }

@@ -1,7 +1,7 @@
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org">
 <head>
-    <title>Inbox</title>
+    <title>Mail</title>
 </head>
 <body>
 <table border="1">
@@ -17,14 +17,17 @@
     <tr th:each="m : ${msgs}">
         <td th:text="${m.isWasRead()}"></td>
         <td th:text="${m.getSender()==null? '' : m.getSender().getName()}"></td>
-        <td th:text="${m.getReceiver()==null? '' : m.getReceiver().getName()}"></td>
-        <td th:text="${m.getText()}"></td>
+        <td th:text="${m.getGroupReceiver() == null? m.getReceiver(): m.getGroupReceiver()}"></td>
+        <td><a th:href="@{'/msgs/' + ${m.getId()}}" th:text="${m.getText()}"/></td>
     </tr>
     </tbody>
 </table>
 
 <p>
     <a href="/write">Write message</a>
+</p>
+<p>
+    <a href="/sent">Go to sent message list</a>
 </p>
 <form th:action="@{/logout}" method="post">
     <input type="submit" value="Sign Out"/>

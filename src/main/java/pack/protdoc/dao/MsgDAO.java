@@ -11,4 +11,6 @@ import java.util.List;
  */
 public interface MsgDAO extends JpaRepository<Message, Integer> {
     List<Message> findByReceiverId(Integer receiverId);
+
+    List<Message> findBySender(User sender);
 }

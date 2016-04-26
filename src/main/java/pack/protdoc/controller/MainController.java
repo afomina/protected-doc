@@ -9,7 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import pack.protdoc.dao.MsgDAO;
 import pack.protdoc.dao.SecurityLevelDAO;
 import pack.protdoc.dao.UserDAO;
+import pack.protdoc.dao.UserGroupDAO;
 import pack.protdoc.model.Message;
+import pack.protdoc.model.User;
 import pack.protdoc.secure.*;
 import pack.protdoc.secure.SecurityException;
 import pack.protdoc.service.MsgService;
@@ -21,7 +23,7 @@ import java.util.List;
  * Created by alexa on 19.04.2016.
  */
 @Controller
-public class MessageController {
+public class MainController {
 
     @Autowired
     private MsgDAO msgDAO;
@@ -33,7 +35,10 @@ public class MessageController {
     private UserDAO userDAO;
     @Autowired
     private SecurityLevelDAO securityLevelDAO;
-    private Logger log = LoggerFactory.getLogger(MessageController.class) ;
+    @Autowired
+    private UserGroupDAO groupDAO;
+
+    private Logger log = LoggerFactory.getLogger(MainController.class) ;
 
     @RequestMapping("login")
     public String login() {
@@ -66,25 +71,39 @@ public class MessageController {
         return "msgs";
     }
 
+    @RequestMapping(value = "/", method = RequestMethod.GET)
+    public String inbox(Model model) {
+        List<Message> msgs = msgService.findByReceiver(UserService.getCurrentUser());
+        model.addAttribute("msgs", msgs);
+        return "msgs";
+    }
+
+    @RequestMapping(value = "/msgs/{id}", method = RequestMethod.GET)
+    public String readMsg(@PathVariable("id") Integer msgId, Model model) {
+        Message msg = msgDAO.findOne(msgId);
+        User currentUser = UserService.getCurrentUser();
+        if (currentUser.equals(msg.getReceiver()) ||
+                (msg.getGroupReceiver() != null && msg.getGroupReceiver().getUsers().contains(currentUser))) {
+            msg.setWasRead(true);
+            msgDAO.save(msg);
+        }
+        model.addAttribute("msg", msg);
+        return "msg";
+    }
+
+    @RequestMapping(value = "/sent", method = RequestMethod.GET)
+    public String sentMsgs(Model model) {
+        List<Message> msgs = msgService.findBySender(UserService.getCurrentUser());
+        model.addAttribute("msgs", msgs);
+        return "msgs";
+    }
+
     private void setupMsgModel(Model model) {
         Message msg = new Message();
         msg.setSender(UserService.getCurrentUser());
         model.addAttribute("msg", msg);
         model.addAttribute("users", userDAO.findAll());
         model.addAttribute("levels", securityLevelDAO.findAll());
+        model.addAttribute("groups", groupDAO.findAll());
     }
-
-    @RequestMapping(value = "/", method = RequestMethod.GET)
-    public String indexPage(Model model) {
-        List<Message> msgs = msgService.findByReceiver(UserService.getCurrentUser());
-        model.addAttribute("msgs", msgs);
-        return "msgs";
-    }
-
-//    @RequestMapping("/getMessages")
-//    @ResponseBody
-//    public List<Message> getMsgList(@RequestParam("id") Integer userId) { //TODO: current logged in user
-//        return msgService.findByReceiver(userDAO.findOne(userId));
-//    }
-
 }

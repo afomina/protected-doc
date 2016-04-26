@@ -1,0 +1,22 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title></title>
+</head>
+<body>
+<p>From: <label th:text="${msg.getSender()}"></label></p>
+    <p>To:
+        <label th:text="${msg.getGroupReceiver() == null? msg.getReceiver(): msg.getGroupReceiver()}"></label></p>
+
+    <p>Message: <textarea th:text="${msg.getText()}" readonly="true"/></p>
+    <p>Security:
+        <label th:text="${msg.getSecurityLevel()}"></label>
+    </p>
+<p>
+    <a href="/">Inbox</a>
+</p>
+<form th:action="@{/logout}" method="post">
+    <input type="submit" value="Sign Out"/>
+</form>
+</body>
+</html>

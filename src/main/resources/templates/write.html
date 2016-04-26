@@ -8,7 +8,12 @@
 <form action="#" th:action="@{/write}" th:object="${msg}" method="post">
     <p>To:
         <select th:field="*{receiver}">
+            <option th:value="${null}" text=""></option>
             <option th:each="u: ${users}" th:value="${u.getId()}" th:text="${u.getName()}"></option>
+        </select>
+        <select th:field="*{groupReceiver}">
+            <option th:value="${null}" text=""></option>
+            <option th:each="g: ${groups}" th:value="${g.getId()}" th:text="${g.getName()}"></option>
         </select>
     </p>
 
