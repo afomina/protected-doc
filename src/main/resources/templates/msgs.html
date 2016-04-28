@@ -11,6 +11,7 @@
         <th>From</th>
         <th>To</th>
         <th>Message</th>
+        <th>Valid</th>
     </tr>
     </thead>
     <tbody>
@@ -19,6 +20,7 @@
         <td th:text="${m.getSender()==null? '' : m.getSender().getName()}"></td>
         <td th:text="${m.getGroupReceiver() == null? m.getReceiver(): m.getGroupReceiver()}"></td>
         <td><a th:href="@{'/msgs/' + ${m.getId()}}" th:text="${m.getText()}"/></td>
+        <td th:text="${m.checkValid()}"></td>
     </tr>
     </tbody>
 </table>

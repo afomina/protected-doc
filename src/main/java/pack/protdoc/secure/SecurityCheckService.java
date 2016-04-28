@@ -1,6 +1,7 @@
 package pack.protdoc.secure;
 
 import org.springframework.stereotype.Service;
+import org.springframework.util.DigestUtils;
 import pack.protdoc.model.Message;
 import pack.protdoc.model.Receiver;
 import pack.protdoc.model.User;
@@ -29,7 +30,15 @@ public class SecurityCheckService {
         return true;
     }
 
+    public static String calcHash(String message) {
+        return DigestUtils.md5DigestAsHex(message.getBytes());
+    }
+
     private boolean check(Message msg, User receiver) {
         return msg.getSecurityLevel().compareTo(receiver.getSecurityLevel()) <= 0;
+    }
+
+    public static boolean checkIntegrity(Message message) {
+        return message.getHash().equals(calcHash(message.getText()));
     }
 }

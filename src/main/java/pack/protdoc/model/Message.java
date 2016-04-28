@@ -1,5 +1,7 @@
 package pack.protdoc.model;
 
+import pack.protdoc.secure.SecurityCheckService;
+
 import javax.persistence.*;
 
 /**
@@ -25,6 +27,7 @@ public class Message extends BaseObject {
     private User receiver;
     private UserGroup groupReceiver;
     private boolean wasRead;
+    private String hash;
 
     public String getText() {
         return text;
@@ -80,5 +83,18 @@ public class Message extends BaseObject {
 
     public void setWasRead(boolean wasRead) {
         this.wasRead = wasRead;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    @Transient
+    public boolean checkValid() {
+        return SecurityCheckService.checkIntegrity(this);
     }
 }

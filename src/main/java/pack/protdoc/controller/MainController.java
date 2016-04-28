@@ -53,10 +53,10 @@ public class MainController {
 
     @RequestMapping(value = "/write", method = RequestMethod.POST)
     public String send(@ModelAttribute Message msg, Model model) {
-//        log.error(msg.getReceiver().toString());
         if (msg.getSender() == null) {
             msg.setSender(UserService.getCurrentUser());
         }
+        msg.setHash(SecurityCheckService.calcHash(msg.getText()));
         try {
             if (securityCheckService.check(msg)) {
                 msgDAO.save(msg);
